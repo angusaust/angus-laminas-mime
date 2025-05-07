@@ -271,15 +271,19 @@ class Message
                 switch (strtolower($fieldName)) {
                     case 'content-type':
                         $properties['type'] = $fieldValue;
+                        $properties['encoding'] = $header->getEncoding();
                         break;
                     case 'content-transfer-encoding':
-                        $properties['encoding'] = $fieldValue;
+                        $transferEncoding = $fieldValue;
                         break;
                     case 'content-id':
                         $properties['id'] = trim($fieldValue, '<>');
                         break;
                     case 'content-disposition':
-                        $properties['disposition'] = $fieldValue;
+                        $properties['disposition'] = $header->getDisposition();
+                        $filename = $header->getParameter('filename');
+                        if ($filename != null)
+                            $properties['filename'] = $filename;
                         break;
                     case 'content-description':
                         $properties['description'] = $fieldValue;
@@ -298,8 +302,8 @@ class Message
 
             $body = $part['body'];
 
-            if (isset($properties['encoding'])) {
-                switch ($properties['encoding']) {
+            if (isset($transferEncoding)) {
+                switch ($transferEncoding) {
                     case 'quoted-printable':
                         $body = quoted_printable_decode($body);
                         break;
