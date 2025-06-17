@@ -34,6 +34,7 @@ class Mime
     public const TYPE_HTML                = 'text/html';
     public const TYPE_ENRICHED            = 'text/enriched';
     public const TYPE_XML                 = 'text/xml';
+    public const TYPE_JSON                = 'application/json';
     public const ENCODING_7BIT            = '7bit';
     public const ENCODING_8BIT            = '8bit';
     public const ENCODING_QUOTEDPRINTABLE = 'quoted-printable';
