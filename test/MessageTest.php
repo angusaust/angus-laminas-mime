@@ -103,11 +103,12 @@ EOD;
 
         $part1 = $parts[0];
         $this->assertEquals('application/octet-stream', $part1->type);
-        $this->assertEquals('8bit', $part1->encoding);
+        // Angus retains header character encoding separately from body transfer decoding.
+        $this->assertEquals('ASCII', $part1->encoding);
 
         $part2 = $parts[1];
         $this->assertEquals('image/gif', $part2->type);
-        $this->assertEquals('base64', $part2->encoding);
+        $this->assertEquals('ASCII', $part2->encoding);
         $this->assertEquals('12', $part2->id);
     }
 
@@ -217,6 +218,13 @@ EOD;
         $parts   = $message->getParts();
 
         $this->assertEquals(1, count($parts));
-        $this->assertEquals('attachment; filename="test.txt"', $parts[0]->getDisposition());
+        // Angus exposes the disposition and filename separately.
+        $this->assertEquals('attachment', $parts[0]->getDisposition());
+        $this->assertEquals('test.txt', $parts[0]->getFileName());
+    }
+
+    public function testAngusJsonMediaTypeRemainsAvailable(): void
+    {
+        self::assertSame('application/json', Mime\Mime::TYPE_JSON);
     }
 }
